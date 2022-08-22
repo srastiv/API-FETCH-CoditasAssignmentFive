@@ -1,50 +1,22 @@
-import 'dart:convert';
-import 'package:coditas_assignment_5_api/models/InterviewTile.dart';
 import 'package:coditas_assignment_5_api/screens/chosen_interviewer.dart';
 import 'package:coditas_assignment_5_api/utilities/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:coditas_assignment_5_api/data/interviewers_fetch.dart';
+import 'package:provider/provider.dart';
+import '../models/Interviewer_count_Provider.dart';
 
-class Interviewers extends StatefulWidget {
-  const Interviewers({Key? key}) : super(key: key);
-
+class InterviewersPage extends StatefulWidget {
+  AsyncSnapshot snapshot;
+  InterviewersPage(this.snapshot);
   @override
-  State<Interviewers> createState() => _InterviewersState();
+  State<InterviewersPage> createState() => _InterviewersPageState();
 }
 
-class _InterviewersState extends State<Interviewers> {
-  // InterviewerTile tile = InterviewerTile();
-
-  Future<List<InterviewerTile>> getInterviewerData() async {
-    try {
-      var response = await http.get(
-        Uri.parse(
-            'https://randomuser.me/api/?seed=ab&inc=name,cell&results=20'),
-        // Uri.https('randomuser.me', 'api/?seed=ab&inc=name,cell&results=20'),
-      );
-
-      if (response.statusCode == 200) {
-        String data = response.body;
-        // print(data);
-
-        //var names = jsonDecode(data)["results"][0]["name"]["first"];
-        var decodedData = jsonDecode(data);
-        // print(decodedData['results']);
-        List jsonData = decodedData["results"];
-        print(jsonData);
-        var result = jsonData
-            .map((element) => (InterviewerTile.fromJson(element)))
-            .toList();
-
-        return result;
-      } else {
-        return [];
-      }
-    } catch (e) {
-      print(e);
-    }
-    return [];
+class _InterviewersPageState extends State<InterviewersPage> {
+  @override
+  void initState() {
+    getInterviewerData();
+    super.initState();
   }
 
   @override
@@ -70,35 +42,28 @@ class _InterviewersState extends State<Interviewers> {
                     child: TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide.none,
-                        ),
+                        focusedBorder: kFocusedBorder,
+                        enabledBorder: kEnabledBorder,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
                         suffixIcon: IconButton(
                           onPressed: () {
-                            showSearch(context: context: context, delegate:MySearchDelegate())
-                            debugPrint("button pressed");
+                            debugPrint("search button pressed");
                           },
-                          icon: Icon(Icons.search),
+                          icon: const Icon(Icons.search),
                           color: Colors.grey.shade700,
                         ),
                         labelText: "Search Interviewers",
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  const Padding(
+                  const SizedBox(height: 20),
+                  Padding(
                     padding: EdgeInsets.only(right: 300),
                     child: Text(
-                      "1 ADDED",
+                      "${Provider.of<InterviewerCountProvider>(context).getInterviewerCount().toString()} ADDED",
                       style: TextStyle(
                           fontSize: 12,
                           color: Color.fromARGB(255, 116, 114, 114),
@@ -110,49 +75,60 @@ class _InterviewersState extends State<Interviewers> {
             ),
             Stack(
               children: <Widget>[
-                Expanded(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height - 220,
-                    child: FutureBuilder<List<InterviewerTile>>(
-                      future: getInterviewerData(),
-                      builder: (context,
-                          AsyncSnapshot<List<InterviewerTile>> snapshot) {
-                        if (snapshot.hasError) {
-                          return Container(
-                            child: Center(
-                              child: Text("Loading"),
-                            ),
-                          );
-                        } else if (snapshot.hasData) {
-                          return ListView.builder(
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(
-                                    snapshot.data![index].name.first,
-                                    style: TextStyle(color: Colors.black),
+                Container(
+                  height: MediaQuery.of(context).size.height - 220,
+                  child: ListView.builder(
+                      itemCount: widget.snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        debugPrint('entered listview builder');
+                        return ListTile(
+                          trailing: TextButton(
+                            onPressed: () {
+                              debugPrint('add-remove button pressed');
+                              Provider.of<InterviewerCountProvider>(context,
+                                      listen: false)
+                                  .addRemoveInterviewer(
+                                      widget.snapshot.data![index]);
+                            },
+                            child: widget.snapshot.data![index].added
+                                ? const Text(
+                                    "REMOVE",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline),
+                                  )
+                                : const Text(
+                                    "ADD",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline),
                                   ),
-                                  subtitle: Text(snapshot.data![index].cell),
-                                  trailing: TextButton(
-                                      child: Text('ADD'), onPressed: () {}),
-                                );
-                              });
-                        } else
-                          return CircularProgressIndicator();
-                      },
-                    ),
-                  ),
+                          ),
+                          subtitle: Text(
+                            widget.snapshot.data![index].cell,
+                            style: TextStyle(
+                                color: widget.snapshot.data![index].added
+                                    ? Colors.blue
+                                    : Colors.black),
+                          ),
+                          title: Text(
+                            '${widget.snapshot.data![index].name.title}. ${widget.snapshot.data![index].name.first} ${widget.snapshot.data![index].name.last}',
+                            style: TextStyle(
+                                color: widget.snapshot.data![index].added
+                                    ? Colors.blue
+                                    : Colors.black),
+                          ),
+                        );
+                      }),
                 ),
                 Positioned(
                   bottom: 0,
                   child: Container(
                     height: 60,
                     alignment: Alignment.bottomCenter,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(151, 211, 212, 216),
-                    ),
+                    decoration: kNextButtonContainerDecoration,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 280),
+                      padding: const EdgeInsets.only(left: 280, bottom: 15),
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -161,6 +137,8 @@ class _InterviewersState extends State<Interviewers> {
                               builder: ((context) => ChosenInterviewer()),
                             ),
                           );
+                          Provider.of<InterviewerCountProvider>(context,
+                              listen: false);
                         },
                         style: ElevatedButton.styleFrom(
                           shadowColor: Color.fromARGB(255, 47, 146, 80),

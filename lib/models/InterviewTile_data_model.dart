@@ -7,10 +7,12 @@ class InterviewerTile {
   InterviewerTile({
     required this.name,
     required this.cell,
+    required this.added,
   });
 
   final Name name;
   final String cell;
+  bool added = false;
 
   factory InterviewerTile.fromRawJson(String str) =>
       InterviewerTile.fromJson(json.decode(str));
@@ -21,6 +23,7 @@ class InterviewerTile {
       InterviewerTile(
         name: Name.fromJson(json["name"]),
         cell: json["cell"],
+        added: false,
       );
 
   Map<String, dynamic> toJson() => {

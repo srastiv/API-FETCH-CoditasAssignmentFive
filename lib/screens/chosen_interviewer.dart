@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class ChosenInterviewer extends StatelessWidget {
-  const ChosenInterviewer({Key? key}) : super(key: key);
-
+  ChosenInterviewer({Key? key}) : super(key: key);
+  //ChosenInterviewer element = ChosenInterviewer();
   @override
   Widget build(BuildContext context) {
+    // List<InterviewerTile> listOfInterviewers;
+    // List<InterviewerTile> selectedInterviewers = [];
+    // for (int i = 0; i <= listOfInterviewers.length; i++) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color.fromARGB(255, 211, 212, 216),
         appBar: AppBar(
-          title: Text('data'),
+          title: Text('Selected Interviewers'),
+          backgroundColor: Color.fromARGB(255, 211, 212, 216),
+          elevation: 0,
         ),
-        body: Center(child: Text("This interviewer was chosen")),
+        body: ListView.builder(
+            itemCount: 4,
+            itemBuilder: (context, index) {
+              return ListTile(
+                subtitle: Text(
+                  'chosen',
+                  style: TextStyle(color: Colors.black),
+                ),
+                title: Text(
+                  '',
+                ),
+              );
+            }),
       ),
     );
   }
