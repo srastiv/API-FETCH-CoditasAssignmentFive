@@ -29,14 +29,12 @@ class MyApp extends StatelessWidget {
               builder:
                   (context, AsyncSnapshot<List<InterviewerTile>> snapshot) {
                 if (snapshot.hasError) {
-                  debugPrint('snapshot has error');
                   return Container(
                     child: Center(
                       child: Text("Loading"),
                     ),
                   );
                 } else if (snapshot.hasData) {
-                  debugPrint('snapshot has data');
                   return InterviewersPage(snapshot);
                 } else
                   return Center(

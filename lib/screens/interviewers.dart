@@ -64,10 +64,7 @@ class _InterviewersPageState extends State<InterviewersPage> {
                     padding: EdgeInsets.only(right: 300),
                     child: Text(
                       "${Provider.of<InterviewerCountProvider>(context).getInterviewerCount().toString()} ADDED",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Color.fromARGB(255, 116, 114, 114),
-                          fontWeight: FontWeight.bold),
+                      style: kADDEDstyle,
                     ),
                   ),
                 ],
@@ -80,11 +77,10 @@ class _InterviewersPageState extends State<InterviewersPage> {
                   child: ListView.builder(
                       itemCount: widget.snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        debugPrint('entered listview builder');
                         return ListTile(
                           trailing: TextButton(
                             onPressed: () {
-                              debugPrint('add-remove button pressed');
+                              //debugPrint('add-remove button pressed');
                               Provider.of<InterviewerCountProvider>(context,
                                       listen: false)
                                   .addRemoveInterviewer(

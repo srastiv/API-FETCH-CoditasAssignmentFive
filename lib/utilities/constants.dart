@@ -16,3 +16,16 @@ const kEnabledBorder = OutlineInputBorder(
 const kNextButtonContainerDecoration = BoxDecoration(
   color: Color.fromARGB(151, 211, 212, 216),
 );
+
+const kADDEDstyle = TextStyle(
+    fontSize: 12,
+    color: Color.fromARGB(255, 116, 114, 114),
+    fontWeight: FontWeight.bold);
+
+const kSelectedInterviewers = Text(
+  'Selected Interviewers',
+  style: TextStyle(
+    fontWeight: FontWeight.w900,
+    fontSize: 24,
+  ),
+);

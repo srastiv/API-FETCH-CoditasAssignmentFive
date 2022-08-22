@@ -15,7 +15,7 @@ Future<List<InterviewerTile>> getInterviewerData() async {
       //var names = jsonDecode(data)["results"][0]["name"]["first"];
       var decodedData = jsonDecode(data);
       List jsonData = decodedData["results"];
-      print(jsonData);
+      //print(jsonData);
       var result = jsonData
           .map(
             (element) => (InterviewerTile.fromJson(element)),
@@ -29,5 +29,6 @@ Future<List<InterviewerTile>> getInterviewerData() async {
   } catch (e) {
     print(e);
   }
+
   return [];
 }
