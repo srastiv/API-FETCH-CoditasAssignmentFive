@@ -39,12 +39,6 @@ Future<List<InterviewerTile>> getInterviewerData({String? query}) async {
       for (int i = 0; i < response.body.length; i++) {
         tempList.add(response.body[i]);
       }
-
-      // List names = []; //names from api
-      // List filteredNames = [];
-      // names = tempList;
-      // filteredNames = names;
-
       return result;
     } else {
       return [];

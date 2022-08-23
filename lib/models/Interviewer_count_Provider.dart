@@ -1,4 +1,3 @@
-import 'package:coditas_assignment_5_api/screens/chosen_interviewer.dart';
 import 'package:flutter/material.dart';
 import 'package:coditas_assignment_5_api/models/InterviewTile_data_model.dart';
 

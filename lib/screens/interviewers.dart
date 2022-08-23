@@ -1,7 +1,6 @@
 import 'package:coditas_assignment_5_api/screens/chosen_interviewer.dart';
 import 'package:coditas_assignment_5_api/utilities/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:coditas_assignment_5_api/data/interviewers_fetch.dart';
 import 'package:provider/provider.dart';
 import '../models/Interviewer_count_Provider.dart';
 import 'package:coditas_assignment_5_api/utilities/searchbar.dart';
@@ -15,82 +14,11 @@ class InterviewersPage extends StatefulWidget {
 }
 
 class _InterviewersPageState extends State<InterviewersPage> {
-//   // step 3: overriding constructor
-//   _HomeScreenState() {
-//     _filter.addListener(() {
-//       if (_filter.text.isEmpty) {
-//         setState(() {
-//           _searchText = "";
-//           filteredNames = names;
-//         });
-//       } else {
-//         setState(() {
-//           _searchText = _filter.text;
-//         });
-//       }
-//     });
-//   }
-
-//   //Step 1
-//   final TextEditingController _filter = TextEditingController();
-//   final Dio dio = Dio();
-//   String _searchText = ' ';
-//   List tempList = [];
-//   List names = []; //names from api
-//   List filteredNames = [];
-//   Icon _searchIcon = Icon(Icons.search);
-//   Widget _appBarTitle = Text('Search all Interviewers');
-
-// //Step 2.2
-//   void _searchPressed() {
-//     setState(() {
-//       if (this._searchIcon.icon == Icons.search) {
-//         this._searchIcon = Icon(Icons.close);
-//         this._appBarTitle = TextField(
-//           controller: _filter,
-//           decoration: InputDecoration(
-//               prefixIcon: Icon(Icons.search), hintText: 'Search...'),
-//         );
-//       } else {
-//         this._searchIcon = Icon(Icons.search);
-//         this._appBarTitle = Text('Search Example');
-//         filteredNames = names;
-//         _filter.clear();
-//       }
-//     });
-//   }
-
-//   //Step 4
-//   Widget _buildList() {
-//     if (!(_searchText.isEmpty)) {
-//       List tempList = [];
-//       for (int i = 0; i < filteredNames.length; i++) {
-//         if (filteredNames[i]['first']
-//             .toLowerCase()
-//             .contains(_searchText.toLowerCase())) {
-//           tempList.add(filteredNames[i]);
-//         }
-//       }
-//       filteredNames = tempList;
-//     }
-//     return ListView.builder(
-//       itemCount: names == null ? 0 : filteredNames.length,
-//       itemBuilder: (BuildContext context, int index) {
-//         return ListTile(
-//           title: Text(filteredNames[index]['first']),
-//           onTap: () => print(filteredNames[index]['first']),
-//         );
-//       },
-//     );
-//   }
-
-//   //Step 6
-
-  @override
-  void initState() {
-    getInterviewerData();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   getInterviewerData();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -201,26 +129,7 @@ class _InterviewersPageState extends State<InterviewersPage> {
                     decoration: kNextButtonContainerDecoration,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 280, bottom: 15),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: ((context) => ChosenInterviewer()),
-                            ),
-                          );
-                          Provider.of<InterviewerCountProvider>(context,
-                              listen: false);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shadowColor: Color.fromARGB(255, 47, 146, 80),
-                          primary: Color.fromARGB(255, 47, 146, 80),
-                        ),
-                        child: const Text(
-                          'NEXT',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+                      child: theNEXTbutton(),
                     ),
                   ),
                 )
@@ -228,6 +137,35 @@ class _InterviewersPageState extends State<InterviewersPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class theNEXTbutton extends StatelessWidget {
+  const theNEXTbutton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => ChosenInterviewer()),
+          ),
+        );
+        Provider.of<InterviewerCountProvider>(context, listen: false);
+      },
+      style: ElevatedButton.styleFrom(
+        shadowColor: Color.fromARGB(255, 47, 146, 80),
+        primary: Color.fromARGB(255, 47, 146, 80),
+      ),
+      child: const Text(
+        'NEXT',
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

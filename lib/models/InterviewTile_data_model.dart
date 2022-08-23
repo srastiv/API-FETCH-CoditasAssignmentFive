@@ -3,8 +3,6 @@
 //     final interviewerTile = interviewerTileFromJson(jsonString);
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 class InterviewerTile {
   InterviewerTile({
     required this.name,
