@@ -4,15 +4,88 @@ import 'package:flutter/material.dart';
 import 'package:coditas_assignment_5_api/data/interviewers_fetch.dart';
 import 'package:provider/provider.dart';
 import '../models/Interviewer_count_Provider.dart';
+import 'package:coditas_assignment_5_api/utilities/searchbar.dart';
 
 class InterviewersPage extends StatefulWidget {
   AsyncSnapshot snapshot;
   InterviewersPage(this.snapshot);
+
   @override
   State<InterviewersPage> createState() => _InterviewersPageState();
 }
 
 class _InterviewersPageState extends State<InterviewersPage> {
+//   // step 3: overriding constructor
+//   _HomeScreenState() {
+//     _filter.addListener(() {
+//       if (_filter.text.isEmpty) {
+//         setState(() {
+//           _searchText = "";
+//           filteredNames = names;
+//         });
+//       } else {
+//         setState(() {
+//           _searchText = _filter.text;
+//         });
+//       }
+//     });
+//   }
+
+//   //Step 1
+//   final TextEditingController _filter = TextEditingController();
+//   final Dio dio = Dio();
+//   String _searchText = ' ';
+//   List tempList = [];
+//   List names = []; //names from api
+//   List filteredNames = [];
+//   Icon _searchIcon = Icon(Icons.search);
+//   Widget _appBarTitle = Text('Search all Interviewers');
+
+// //Step 2.2
+//   void _searchPressed() {
+//     setState(() {
+//       if (this._searchIcon.icon == Icons.search) {
+//         this._searchIcon = Icon(Icons.close);
+//         this._appBarTitle = TextField(
+//           controller: _filter,
+//           decoration: InputDecoration(
+//               prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+//         );
+//       } else {
+//         this._searchIcon = Icon(Icons.search);
+//         this._appBarTitle = Text('Search Example');
+//         filteredNames = names;
+//         _filter.clear();
+//       }
+//     });
+//   }
+
+//   //Step 4
+//   Widget _buildList() {
+//     if (!(_searchText.isEmpty)) {
+//       List tempList = [];
+//       for (int i = 0; i < filteredNames.length; i++) {
+//         if (filteredNames[i]['first']
+//             .toLowerCase()
+//             .contains(_searchText.toLowerCase())) {
+//           tempList.add(filteredNames[i]);
+//         }
+//       }
+//       filteredNames = tempList;
+//     }
+//     return ListView.builder(
+//       itemCount: names == null ? 0 : filteredNames.length,
+//       itemBuilder: (BuildContext context, int index) {
+//         return ListTile(
+//           title: Text(filteredNames[index]['first']),
+//           onTap: () => print(filteredNames[index]['first']),
+//         );
+//       },
+//     );
+//   }
+
+//   //Step 6
+
   @override
   void initState() {
     getInterviewerData();
@@ -50,6 +123,9 @@ class _InterviewersPageState extends State<InterviewersPage> {
                         fillColor: Colors.white,
                         suffixIcon: IconButton(
                           onPressed: () {
+                            showSearch(
+                                context: context,
+                                delegate: SearchInterviewer());
                             debugPrint("search button pressed");
                           },
                           icon: const Icon(Icons.search),
@@ -90,7 +166,7 @@ class _InterviewersPageState extends State<InterviewersPage> {
                                 ? const Text(
                                     "REMOVE",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.blue,
                                         decoration: TextDecoration.underline),
                                   )
                                 : const Text(
