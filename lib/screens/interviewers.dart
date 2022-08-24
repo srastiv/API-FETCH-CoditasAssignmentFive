@@ -1,26 +1,44 @@
-import 'package:coditas_assignment_5_api/screens/chosen_interviewer.dart';
+import 'package:coditas_assignment_5_api/models/InterviewTile_data_model.dart';
 import 'package:coditas_assignment_5_api/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/Interviewer_count_Provider.dart';
-import 'package:coditas_assignment_5_api/utilities/searchbar.dart';
+import '../widgets/next_button.dart';
 
 class InterviewersPage extends StatefulWidget {
-  AsyncSnapshot snapshot;
-  InterviewersPage(this.snapshot);
-
+  List<InterviewerTile> initialListFromAPI;
+  InterviewersPage(this.initialListFromAPI);
   @override
   State<InterviewersPage> createState() => _InterviewersPageState();
 }
 
-class _InterviewersPageState extends State<InterviewersPage> {
-  // @override
-  // void initState() {
-  //   getInterviewerData();
-  //   super.initState();
-  // }
+List<InterviewerTile> tempList = [];
 
+class _InterviewersPageState extends State<InterviewersPage> {
   @override
+  void initState() {
+    List<InterviewerTile> tempList = widget.initialListFromAPI;
+    super.initState();
+  }
+
+  searchInterviewer(query) {
+    List<InterviewerTile> resultsList = widget.initialListFromAPI.where((e) {
+      final interviewerFirst = e.name.first.toLowerCase().contains(
+            query.toLowerCase(),
+          );
+      final interviewerLast = e.name.last.toLowerCase().contains(
+            query.toLowerCase(),
+          );
+      return interviewerFirst || interviewerLast;
+    }).toList();
+    setState(() {
+      tempList = resultsList;
+    });
+
+    print(resultsList[0].name.last);
+    return resultsList;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 211, 212, 216),
@@ -41,6 +59,7 @@ class _InterviewersPageState extends State<InterviewersPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: TextField(
+                      onChanged: searchInterviewer,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         focusedBorder: kFocusedBorder,
@@ -50,12 +69,7 @@ class _InterviewersPageState extends State<InterviewersPage> {
                         filled: true,
                         fillColor: Colors.white,
                         suffixIcon: IconButton(
-                          onPressed: () {
-                            showSearch(
-                                context: context,
-                                delegate: SearchInterviewer());
-                            debugPrint("search button pressed");
-                          },
+                          onPressed: () {},
                           icon: const Icon(Icons.search),
                           color: Colors.grey.shade700,
                         ),
@@ -78,48 +92,63 @@ class _InterviewersPageState extends State<InterviewersPage> {
               children: <Widget>[
                 Container(
                   height: MediaQuery.of(context).size.height - 220,
-                  child: ListView.builder(
-                      itemCount: widget.snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          trailing: TextButton(
-                            onPressed: () {
-                              //debugPrint('add-remove button pressed');
-                              Provider.of<InterviewerCountProvider>(context,
-                                      listen: false)
-                                  .addRemoveInterviewer(
-                                      widget.snapshot.data![index]);
-                            },
-                            child: widget.snapshot.data![index].added
-                                ? const Text(
-                                    "REMOVE",
-                                    style: TextStyle(
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline),
-                                  )
-                                : const Text(
-                                    "ADD",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        decoration: TextDecoration.underline),
-                                  ),
-                          ),
-                          subtitle: Text(
-                            widget.snapshot.data![index].cell,
+                  child: tempList.length == 0
+                      ? Center(
+                          child: Text(
+                            'Enter a valid search query',
                             style: TextStyle(
-                                color: widget.snapshot.data![index].added
-                                    ? Colors.blue
-                                    : Colors.black),
+                                fontWeight: FontWeight.bold, fontSize: 25),
                           ),
-                          title: Text(
-                            '${widget.snapshot.data![index].name.title}. ${widget.snapshot.data![index].name.first} ${widget.snapshot.data![index].name.last}',
-                            style: TextStyle(
-                                color: widget.snapshot.data![index].added
-                                    ? Colors.blue
-                                    : Colors.black),
-                          ),
-                        );
-                      }),
+                        )
+                      : ListView.builder(
+                          itemCount: tempList.length,
+                          itemBuilder: (context, index) {
+                            // int startIndex =
+                            //     tempList[index].name.first.toLowerCase().indexOf(searchInterviewer(context).toLowerCase());
+                            return ListTile(
+                              trailing: TextButton(
+                                onPressed: () {
+                                  //debugPrint('add-remove button pressed');
+                                  Provider.of<InterviewerCountProvider>(context,
+                                          listen: false)
+                                      .addRemoveInterviewer(tempList[index]);
+                                },
+                                child: tempList[index].added
+                                    ? const Text(
+                                        "REMOVE",
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      )
+                                    : const Text(
+                                        "ADD",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                              ),
+                              subtitle: Text(
+                                tempList[index].cell,
+                                style: TextStyle(
+                                    color: tempList[index].added
+                                        //widget.initialListFromAPI[index].added
+                                        ? Colors.blue
+                                        : Colors.black),
+                              ),
+                              title: RichText(
+                                text: TextSpan(
+                                  text:
+                                      '${tempList[index].name.title}. ${tempList[index].name.first} ${tempList[index].name.last}',
+                                  style: TextStyle(
+                                      color: tempList[index].added
+                                          ? Colors.blue
+                                          : Colors.black),
+                                ),
+                              ),
+                            );
+                          }),
                 ),
                 Positioned(
                   bottom: 0,
@@ -137,35 +166,6 @@ class _InterviewersPageState extends State<InterviewersPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class theNEXTbutton extends StatelessWidget {
-  const theNEXTbutton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: ((context) => ChosenInterviewer()),
-          ),
-        );
-        Provider.of<InterviewerCountProvider>(context, listen: false);
-      },
-      style: ElevatedButton.styleFrom(
-        shadowColor: Color.fromARGB(255, 47, 146, 80),
-        primary: Color.fromARGB(255, 47, 146, 80),
-      ),
-      child: const Text(
-        'NEXT',
-        style: TextStyle(color: Colors.white),
       ),
     );
   }

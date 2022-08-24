@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home:  FutureBuilder<List<InterviewerTile>>(
+        home: FutureBuilder<List<InterviewerTile>>(
             future: getInterviewerData(),
             builder: (context, AsyncSnapshot<List<InterviewerTile>> snapshot) {
               if (snapshot.hasError) {
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
                   ),
                 );
               } else if (snapshot.hasData) {
-                return InterviewersPage(snapshot);
+                return InterviewersPage(snapshot.data!);
               } else
                 return Center(
                   child: CircularProgressIndicator(),

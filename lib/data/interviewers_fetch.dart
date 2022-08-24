@@ -25,16 +25,6 @@ Future<List<InterviewerTile>> getInterviewerData({String? query}) async {
           )
           .toList();
 
-      if (query != null) {
-        result = result
-            .where(
-              (element) => element.name.first.toLowerCase().contains(
-                    query.toLowerCase(),
-                  ),
-            )
-            .toList();
-      }
-
       List tempList = [];
       for (int i = 0; i < response.body.length; i++) {
         tempList.add(response.body[i]);

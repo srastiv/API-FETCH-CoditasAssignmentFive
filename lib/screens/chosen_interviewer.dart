@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:coditas_assignment_5_api/models/Interviewer_count_Provider.dart';
 import 'package:coditas_assignment_5_api/utilities/constants.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +6,6 @@ import '../models/Interviewer_count_Provider.dart';
 
 class ChosenInterviewer extends StatelessWidget {
   ChosenInterviewer({Key? key}) : super(key: key);
-
-  // final interviewchosen = ;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
